@@ -1,0 +1,105 @@
+body {
+    display: flex;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+.rickshaw_legend {
+    padding: 0 0 4px 0;
+}
+
+.rickshaw_graph .detail .x_label {
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+    background-image: url(background-noise-toolbar.png), linear-gradient(#3e4750, #3e4750);
+    box-shadow: 0 1px 0 hsla(204,45%,98%,.05) inset, -1px 0 0 hsla(204,45%,98%,.05) inset, 0 -1px 0 hsla(204,45%,98%,.05) inset;
+    opacity: 0.9;
+    border-radius: 2px;
+    border: none;
+}
+
+.rickshaw_graph .detail .item {
+    font-family: 'Open Sans', sans-serif;
+    border: 0;
+    border-radiux: 2px;
+    padding: 6px;
+}
+
+.rickshaw_graph .detail .item.active {
+    color: white;
+    background-image: url(background-noise-toolbar.png), linear-gradient(#3e4750, #3e4750);
+}
+
+div#legend {
+    width: 100%;
+    font-size: inherit;
+    font-family: 'Open Sans', sans-serif;
+    background-color: inherit;
+    color: inherit;
+}
+
+div#legend ul {
+    padding: 0;
+}
+
+div#legend li {
+    display: inline-block;
+}
+
+div#main {
+    margin: 20px auto;
+}
+
+div#graph {
+    border-right: 1px solid #f0f0f0;
+}
+
+div#slider {
+    margin-top: 20px;
+}
+
+div#controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 8px 10px;
+    color: hsl(210,30%,85%);
+    background-image: url(background-noise-toolbar.png), linear-gradient(#3e4750, #3e4750);
+    border-top: 1px solid #060a0d;
+    box-shadow: 0 1px 0 hsla(204,45%,98%,.05) inset, -1px 0 0 hsla(204,45%,98%,.05) inset, 0 -1px 0 hsla(204,45%,98%,.05) inset;
+}
+
+div#column-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+h1#message {
+    text-align: center;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    height: 2em;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+input {
+    font-size: 100%;
+    min-height: 22px;
+    border: 1px solid hsla(210,8%,5%,.6);
+    border-radius: 2px;
+    background-color: transparent;
+    background-image: linear-gradient(hsla(210,16%,76%,.15), hsla(210,16%,76%,.35));
+    padding: 3px;
+    box-shadow: 0 1px 1px hsla(210,8%,5%,.3) inset,
+    0 0 0 1px hsla(210,16%,76%,.1) inset,
+    0 1px 0 hsla(210,16%,76%,.15);
+    color: inherit;
+}

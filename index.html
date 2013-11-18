@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mochitest Memory Viewer</title>
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="rickshaw/rickshaw.css" rel="stylesheet">
+    <link href="mochimem.css" rel="stylesheet">
+
+    <script src="rickshaw/vendor/d3.min.js"></script>
+    <script src="rickshaw/vendor/d3.layout.min.js"></script>
+    <script src="rickshaw/rickshaw.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
+    <script src="mochimem.js"></script>
+  </head>
+
+  <body>
+    <div id="main">
+      <div id="graph"></div>
+      <div id="slider"></div>
+    </div>
+
+    <h1 id="message">Please enter a URL below.</h1>
+
+    <div id="controls">
+      <div id="column-box">
+        <div id="legend"></div>
+        <input id="url" type="text" placeholder="URL to full raw TBPL log" onkeypress="onTypeURL(event);"></input>
+      </div>
+    </div>
+  </body>
+</html>
