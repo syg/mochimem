@@ -88,6 +88,7 @@ function renderStats(stats) {
     width: document.body.offsetWidth - 80,
     height: window.innerHeight - document.getElementById("url").offsetHeight - 125,
     renderer: "line",
+    interpolation: "linear",
     series: series
   });
 
