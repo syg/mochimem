@@ -28,11 +28,16 @@ function hideMessage() {
 }
 
 function visualize(url) {
+  if (url === "") {
+    showMessage("<h1 style='color: #d62728;'>Error</h1>");
+    return;
+  }
+
   var xhr = new XMLHttpRequest();
 
   xhr.onload = function () {
     if (xhr.status !== 200) {
-      showMessage("<span style='color: #d62728;'>Error</span>");
+      showMessage("<h1 style='color: #d62728;'>Error</h1>");
       return;
     }
 
