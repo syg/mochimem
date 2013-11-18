@@ -11,15 +11,14 @@ var CONFIG = {
   }
 };
 
-function resetDisplay() {
-  document.getElementById("main").innerHTML = '<div id="graph"></div><div id="slider"></div>';
-  document.getElementById("legend").innerHTML = "";
-}
-
 function showMessage(message) {
   document.getElementById("main").style.display = "none";
   document.getElementById("message").style = "";
   document.getElementById("message").innerHTML = message;
+}
+
+function showError(message) {
+    showMessage("<h1 style='color: #d62728;'>" + message + "</h1>");
 }
 
 function hideMessage() {
@@ -29,7 +28,7 @@ function hideMessage() {
 
 function visualize(url) {
   if (url === "") {
-    showMessage("<h1 style='color: #d62728;'>Error</h1>");
+    showError("No URL given");
     return;
   }
 
@@ -37,11 +36,10 @@ function visualize(url) {
 
   xhr.onload = function () {
     if (xhr.status !== 200) {
-      showMessage("<h1 style='color: #d62728;'>Error</h1>");
+      showError("Failed to load log");
       return;
     }
 
-    showMessage("Loading...");
     renderStats(extractStats(xhr.response));
   };
 
@@ -63,6 +61,11 @@ function renderStats(stats) {
   var tests = stats.tests;
   var series = [];
 
+  if (supported.length === 0) {
+    showError("No memory stats found");
+    return;
+  }
+
   // Extract data series for each of the reported stats.
   for (var instrument in supported) {
     if (!supported[instrument])
@@ -78,8 +81,6 @@ function renderStats(stats) {
       data: data
     });
   }
-
-  resetDisplay();
 
   // FIXME: I can't figure out an elegant way to use CSS and DOM to figure
   // out the graph width.
@@ -184,4 +185,7 @@ function checkLogURLFromQuery() {
       }
     }
   }
+
+  showMessage("<h1>Please enter the TBPL full log URL to a mochitest run below.</h1>" +
+              "<p>Look for the &ldquo;Download Full Log&rdquo; link in getParsedLog.php</p>");
 }
