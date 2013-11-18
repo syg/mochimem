@@ -78,12 +78,12 @@ div#column-box {
     width: 100%;
 }
 
-h1#message {
+div#message {
     text-align: center;
     overflow: auto;
     margin: auto;
     position: absolute;
-    height: 2em;
+    height: 10em;
     top: 0;
     left: 0;
     bottom: 0;

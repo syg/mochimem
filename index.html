@@ -18,16 +18,18 @@
 
   <body>
     <div id="main">
-      <div id="graph"></div>
-      <div id="slider"></div>
+
     </div>
 
-    <h1 id="message">Please enter a URL below.</h1>
+    <div id="message">
+      <h1>Please enter the URL of a TBPL full log of a mochitest run below.</h1>
+      <p>Look for the &ldquo;Download Full Log&rdquo; link in getParsedLog.php</p>
+    </div>
 
     <div id="controls">
       <div id="column-box">
         <div id="legend"></div>
-        <input id="url" type="text" placeholder="URL to full raw TBPL log" onkeypress="onTypeURL(event);"></input>
+        <input id="url" type="text" onkeypress="onTypeURL(event);"></input>
       </div>
     </div>
   </body>
