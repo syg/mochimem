@@ -166,7 +166,7 @@ function onTypeLogURL(e)
 {
   if (e.keyCode === 13) {
     var url = document.getElementById("url").value;
-    window.location.search = "?url= " + escape(url);
+    window.location.search = "?url=" + escape(url);
   }
 }
 
