@@ -61,7 +61,7 @@ function renderStats(stats) {
   var tests = stats.tests;
   var series = [];
 
-  if (supported.length === 0) {
+  if (Object.keys(stats.supported).length === 0) {
     showError("No memory stats found");
     return;
   }
