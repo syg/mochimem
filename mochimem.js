@@ -11,17 +11,19 @@ var CONFIG = {
   }
 };
 
-// Singleton instance of Rickshaw.Graph, re-rendered when loading a new log.
-var graph;
+function resetDisplay() {
+  document.getElementById("main").innerHTML = '<div id="graph"></div><div id="slider"></div>';
+  document.getElementById("legend").innerHTML = "";
+}
 
 function showMessage(message) {
-  document.getElementById("main").style = "display: none;";
+  document.getElementById("main").style.display = "none";
   document.getElementById("message").style = "";
   document.getElementById("message").innerHTML = message;
 }
 
 function hideMessage() {
-  document.getElementById("message").style = "display: none;";
+  document.getElementById("message").style.display = "none";
   document.getElementById("main").style = "";
 }
 
@@ -72,51 +74,43 @@ function renderStats(stats) {
     });
   }
 
+  resetDisplay();
 
-  if (!graph) {
-    // FIXME: I can't figure out an elegant way to use CSS and DOM to figure
-    // out the graph width.
-    graph = new Rickshaw.Graph({
-      element: document.getElementById("graph"),
-      width: document.body.offsetWidth - 80,
-      height: window.innerHeight - document.getElementById("controls").offsetHeight - 110,
-      renderer: "line",
-      series: series
-    });
+  // FIXME: I can't figure out an elegant way to use CSS and DOM to figure
+  // out the graph width.
+  var graph = new Rickshaw.Graph({
+    element: document.getElementById("graph"),
+    width: document.body.offsetWidth - 80,
+    height: window.innerHeight - document.getElementById("url").offsetHeight - 125,
+    renderer: "line",
+    series: series
+  });
 
-    var yAxis = new Rickshaw.Graph.Axis.Y({
-      graph: graph,
-      tickFormat: formatBytes
-    });
+  var yAxis = new Rickshaw.Graph.Axis.Y({
+    graph: graph,
+    tickFormat: formatBytes
+  });
 
-    var slider = new Rickshaw.Graph.RangeSlider({
-      graph: graph,
-      element: document.getElementById("slider"),
-    });
+  var slider = new Rickshaw.Graph.RangeSlider({
+    graph: graph,
+    element: document.getElementById("slider"),
+  });
 
-    var hoverDetail = new Rickshaw.Graph.HoverDetail({
-      graph: graph,
-      xFormatter: function (x) { return tests[x].url; },
-      yFormatter: formatBytes
-    });
+  var hoverDetail = new Rickshaw.Graph.HoverDetail({
+    graph: graph,
+    xFormatter: function (x) { return tests[x].url; },
+    yFormatter: formatBytes
+  });
 
-    var legend = new Rickshaw.Graph.Legend({
-      graph: graph,
-      element: document.getElementById("legend")
-    });
+  var legend = new Rickshaw.Graph.Legend({
+    graph: graph,
+    element: document.getElementById("legend")
+  });
 
-    var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-      graph: graph,
-      legend: legend
-    });
-  } else {
-    // If we're loading a new graph, swap out the series guts. We can't just
-    // swap in the the new series wholesale, because Rickshaw.Graph adds
-    // functions onto the array.
-    for (var i = 0; i < series.length; i++)
-      graph.series[i] = series[i];
-    graph.series.length = series.length;
-  }
+  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+    graph: graph,
+    legend: legend
+  });
 
   graph.render();
   hideMessage();
