@@ -165,7 +165,7 @@ function onTypeLogURL(e)
 {
   if (e.keyCode === 13) {
     var url = document.getElementById("url").value;
-    visualize(url);
+    window.location.search = "?url= " + escape(url);
   }
 }
 
@@ -176,7 +176,9 @@ function checkLogURLFromQuery() {
       var p = pairs[i].split("=");
       var k = unescape(p[0]);
       if (k === "url") {
-        visualize(unescape(p[1]));
+        var url = unescape(p[1]);
+        document.getElementById("url").value = url;
+        visualize(url);
         return;
       }
     }
