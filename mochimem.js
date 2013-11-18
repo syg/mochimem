@@ -161,10 +161,24 @@ function extractStats(buf) {
   return { supported: supported, tests: tests };
 }
 
-function onTypeURL(e)
+function onTypeLogURL(e)
 {
   if (e.keyCode === 13) {
     var url = document.getElementById("url").value;
     visualize(url);
+  }
+}
+
+function checkLogURLFromQuery() {
+  if (window.location.search.length > 1) {
+    var pairs = window.location.search.substr(1).split("&");
+    for (var i = 0; i < pairs.length; i++) {
+      var p = pairs[i].split("=");
+      var k = unescape(p[0]);
+      if (k === "url") {
+        visualize(unescape(p[1]));
+        return;
+      }
+    }
   }
 }

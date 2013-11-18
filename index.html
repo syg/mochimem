@@ -16,7 +16,7 @@
     <script src="mochimem.js"></script>
   </head>
 
-  <body>
+  <body onload="checkLogURLFromQuery();">
     <div id="main">
 
     </div>
@@ -29,7 +29,7 @@
     <div id="controls">
       <div id="column-box">
         <div id="legend"></div>
-        <input id="url" type="text" onkeypress="onTypeURL(event);"></input>
+        <input id="url" type="text" onkeypress="onTypeLogURL(event);"></input>
       </div>
     </div>
   </body>
