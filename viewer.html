@@ -26,10 +26,16 @@
       <h1>Loading...</h1>
     </div>
 
-    <div id="controls">
-      <div id="column-box">
-        <div id="legend"></div>
-        <input id="url" type="text" onkeypress="onTypeLogURL(event);"></input>
+    <div id="panel">
+      <div id="controls">
+        <div class="log-controls">
+          <div id="legend"></div>
+          <input id="first-log" type="text" onkeypress="onTypeLogURL(event);"></input>
+        </div>
+      </div>
+
+      <div id="buttons">
+        <div id="add-log" class="button" onclick="addLogControls();">Add log</div>
       </div>
     </div>
   </body>
