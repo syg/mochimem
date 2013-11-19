@@ -30,14 +30,14 @@ var Legend = Rickshaw.Class.create({
 
     this.element.classList.add(this.className);
 
-    var stats = args.stats.reverse();
+    var stats = args.stats;
     var lists = [];
     for (var i = 0; i < stats.length; i++) {
       var list = document.createElement("ul");
-      lists.push(list)
+      lists.push(list);
       this.element.appendChild(list);
     }
-    this.lists = lists;
+    this.lists = lists.reverse();
 
     this.render();
   },
