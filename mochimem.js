@@ -150,7 +150,10 @@ function validateStats(stats) {
 }
 
 function computeGraphHeight() {
-  return window.innerHeight - document.getElementById("panel").offsetHeight - 100;
+  var mainContainer = document.getElementById("main");
+  mainContainer.style.bottom = "0";
+  mainContainer.style.bottom = document.getElementById("panel").offsetHeight + "px";
+  return mainContainer.offsetHeight - 80;
 }
 
 function renderStats(stats) {
@@ -190,11 +193,9 @@ function renderStats(stats) {
     }
   }
 
-  // FIXME: I can't figure out an elegant way to use CSS and DOM to figure
-  // out the graph width.
   graph = new Rickshaw.Graph({
     element: document.getElementById("graph"),
-    width: document.body.offsetWidth - 80,
+    width: document.getElementById("main").offsetWidth,
     height: computeGraphHeight(),
     renderer: "line",
     interpolation: "linear",
@@ -230,13 +231,16 @@ function renderStats(stats) {
   var hoverValues = {};
   var hoverLines = legend.lines;
   for (var i = 0; i < hoverLines.length; i++) {
-    var hoverValue = document.createElement("span");
+    var hoverValue = document.createElement("div");
     hoverValue.className = "hover-value";
+    hoverValue.innerHTML = "N/A"
     hoverLines[i].element.appendChild(hoverValue);
     hoverValues[hoverLines[i].series.name] = hoverValue;
   }
   graph._hoverValues = hoverValues;
 
+  // Recompute the height since the the panel height may have changed.
+  graph.setSize({ width: graph.width, height: computeGraphHeight() });
   graph.render();
   hideMessage();
 }

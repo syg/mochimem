@@ -9,14 +9,8 @@ body {
     width: 100%;
 }
 
-.rickshaw_legend .line {
-    padding: 0;
-}
-
 .hover-value {
-    display: inline-block;
-    padding-left: 8px;
-    min-width: 120px;
+    text-align: right;
 }
 
 .disabled .hover-value {
@@ -44,7 +38,10 @@ div#legend li {
 }
 
 div#main {
-    margin: 20px auto;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
 }
 
 div#graph {
@@ -77,12 +74,13 @@ div#buttons {
 div#add-log {
     display: inline-block;
     cursor: default;
+    margin-top: auto;
 }
 
 .button {
     font-size: 80%;
     text-align: center;
-    min-height: 22px;
+    height: 22px;
     min-width: 58px;
     padding: 2px 8px;
     text-shadow: 0 -1px 0 hsla(210,8%,5%,.45);
