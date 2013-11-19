@@ -25,9 +25,18 @@ var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
   render: function (args) {
     document.getElementById("test-name").innerHTML = args.formattedXValue;
 
-    var details = args.detail.sort(function (a, b) { return a.order - b.order });
+    var details = args.detail;
+    var maxX = 0;
+    for (var i = 0; i < details.length; i++)
+      maxX = Math.max(maxX, details[i].value.x);
+
     for (var i = 0; i < details.length; i++) {
       var d = details[i];
+
+      if (d.value.x < maxX) {
+        graph._hoverValues[d.name].innerHTML = "N/A";
+        continue;
+      }
 
       // Display the y value in the legend.
       graph._hoverValues[d.name].innerHTML = d.formattedYValue;
@@ -55,7 +64,15 @@ var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
   hide: function () {
     if (this._hoverHold)
       return;
+    document.getElementById("test-name").classList.add("inactive");
     Rickshaw.Graph.HoverDetail.prototype.hide.call(this);
+  },
+
+  show: function () {
+    if (this._hoverHold)
+      return;
+    document.getElementById("test-name").classList.remove("inactive");
+    Rickshaw.Graph.HoverDetail.prototype.show.call(this);
   },
 
   _addListeners: function() {
@@ -119,8 +136,14 @@ function downloadLog(xhrs, url, idx, stats) {
     var allDone = true;
     for (var i = 0; i < stats.length; i++)
       allDone = allDone && stats[i] !== null;
-    if (allDone && validateStats(stats))
-      renderStats(stats);
+    if (allDone) {
+      // Sort by number of tests run.
+      stats = stats.sort(function (s1, s2) {
+        return s2.tests.length - s1.tests.length;
+      });
+      if (validateStats(stats))
+        renderStats(stats);
+    }
   };
 
   xhr.open("GET", url, true);
@@ -138,10 +161,6 @@ function visualize(urls) {
 }
 
 function validateStats(stats) {
-  // Sort by number of tests run.
-  stats = stats.sort(function (s1, s2) {
-    return s2.tests.length - s1.tests.length;
-  });
   var tests0 = stats[0].tests;
 
   // Make sure all runs prefix match on the names.
@@ -222,7 +241,7 @@ function renderStats(stats) {
 
   var hoverDetail = new Hover({
     graph: graph,
-    xFormatter: function (x) { return tests[x].url; },
+    xFormatter: function (x) { return stats[0].tests[x].url; },
     yFormatter: formatBytes
   });
 

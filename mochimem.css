@@ -20,6 +20,11 @@ body {
 div#test-name {
     margin: 12px 0;
     text-align: center;
+    transition: opacity 0.25s linear;
+}
+
+div#test-name.inactive {
+    opacity: 0;
 }
 
 div#legend {
