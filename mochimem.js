@@ -20,8 +20,93 @@ function formatBytes(bytes) {
   return mb.toFixed(2) + " MB";
 }
 
+// Custom legend.
+var Legend = Rickshaw.Class.create({
+  className: "rickshaw_legend",
+
+  initialize: function(args) {
+    this.element = args.element;
+    this.graph = args.graph;
+
+    this.element.classList.add(this.className);
+
+    var stats = args.stats;
+    var lists = [];
+    for (var i = 0; i < stats.length; i++) {
+      var list = document.createElement("ul");
+      lists.push(list)
+      this.element.appendChild(list);
+    }
+    this.lists = lists;
+
+    this.render();
+  },
+
+  render: function() {
+    this.hoverValues = {};
+    var lists = this.lists;
+    for (var i = 0; i < lists.length; i++) {
+      this.hoverValues[i] = {};
+      var list = lists[i];
+      while (list.firstChild)
+        list.removeChild(list.firstChild);
+    }
+
+    this.lines = [];
+    var series = this.graph.series;
+    for (var i = 0; i < series.length; i++)
+      this.addLine(series[i]);
+  },
+
+  addLine: function(series) {
+    var line = document.createElement("li");
+    line.className = "line";
+    if (series.disabled)
+      line.className += " disabled";
+
+    var swatch = document.createElement("div");
+    swatch.className = "swatch";
+    swatch.style.backgroundColor = series.color;
+
+    line.appendChild(swatch);
+
+    var label = document.createElement("span");
+    label.className = "label";
+    label.innerHTML = series.name;
+
+    line.appendChild(label);
+
+    var hoverValue = document.createElement("span");
+    hoverValue.className = "hover-value";
+    hoverValue.innerHTML = "N/A"
+    this.hoverValues[series.logIndex][series.name] = hoverValue;
+    line.appendChild(hoverValue);
+    this.lists[series.logIndex].appendChild(line);
+
+    line.series = series;
+
+    if (series.noLegend)
+      line.style.display = "none";
+
+    var _line = { element: line, series: series };
+    if (this.shelving) {
+      this.shelving.addAnchor(_line);
+      this.shelving.updateBehaviour();
+    }
+    if (this.highlighter)
+      this.highlighter.addHighlightEvents(_line);
+    this.lines.push(_line);
+    return line;
+  }
+});
+
 // Custom hover.
 var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
+  initialize: function (args) {
+    this.legend = args.legend;
+    Rickshaw.Graph.HoverDetail.prototype.initialize.call(this, args);
+  },
+
   render: function (args) {
     document.getElementById("test-name").innerHTML = args.formattedXValue;
 
@@ -34,12 +119,12 @@ var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
       var d = details[i];
 
       if (d.value.x < maxX) {
-        graph._hoverValues[d.name].innerHTML = "N/A";
+        this.legend.hoverValues[d.series.logIndex][d.name].innerHTML = "N/A";
         continue;
       }
 
       // Display the y value in the legend.
-      graph._hoverValues[d.name].innerHTML = d.formattedYValue;
+      this.legend.hoverValues[d.series.logIndex][d.name].innerHTML = d.formattedYValue;
 
       // Display a dot on every line.
       var dot = document.createElement("div");
@@ -136,14 +221,8 @@ function downloadLog(xhrs, url, idx, stats) {
     var allDone = true;
     for (var i = 0; i < stats.length; i++)
       allDone = allDone && stats[i] !== null;
-    if (allDone) {
-      // Sort by number of tests run.
-      stats = stats.sort(function (s1, s2) {
-        return s2.tests.length - s1.tests.length;
-      });
-      if (validateStats(stats))
-        renderStats(stats);
-    }
+    if (allDone && validateStats(stats))
+      renderStats(stats);
   };
 
   xhr.open("GET", url, true);
@@ -161,6 +240,10 @@ function visualize(urls) {
 }
 
 function validateStats(stats) {
+  // Sort by number of tests run.
+  stats = stats.sort(function (s1, s2) {
+    return s2.tests.length - s1.tests.length;
+  });
   var tests0 = stats[0].tests;
 
   // Make sure all runs prefix match on the names.
@@ -214,7 +297,8 @@ function renderStats(stats) {
 
       series.push({
         color: palette.color(h(n + instrument)),
-        name: stats.length > 1 ? n + ":" + instrument : instrument,
+        name: instrument,
+        logIndex: n,
         data: data
       });
     }
@@ -239,14 +323,9 @@ function renderStats(stats) {
     element: document.getElementById("slider"),
   });
 
-  var hoverDetail = new Hover({
+  var legend = new Legend({
     graph: graph,
-    xFormatter: function (x) { return stats[0].tests[x].url; },
-    yFormatter: formatBytes
-  });
-
-  var legend = new Rickshaw.Graph.Legend({
-    graph: graph,
+    stats: stats,
     element: document.getElementById("legend")
   });
 
@@ -255,16 +334,16 @@ function renderStats(stats) {
     legend: legend
   });
 
-  var hoverValues = {};
-  var hoverLines = legend.lines;
-  for (var i = 0; i < hoverLines.length; i++) {
-    var hoverValue = document.createElement("div");
-    hoverValue.className = "hover-value";
-    hoverValue.innerHTML = "N/A"
-    hoverLines[i].element.appendChild(hoverValue);
-    hoverValues[hoverLines[i].series.name] = hoverValue;
-  }
-  graph._hoverValues = hoverValues;
+  // Use the longest run to index test names.
+  var longestRun = stats.sort(function (s1, s2) {
+    return s2.tests.length - s1.tests.length;
+  })[0].tests;
+  var hoverDetail = new Hover({
+    graph: graph,
+    legend: legend,
+    xFormatter: function (x) { return longestRun[x].url; },
+    yFormatter: formatBytes
+  });
 
   // Recompute the height since the the panel height may have changed.
   graph.setSize({ width: graph.width, height: computeGraphHeight() });

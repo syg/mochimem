@@ -10,7 +10,9 @@ body {
 }
 
 .hover-value {
+    display: inline-block;
     text-align: right;
+    min-width: 100px;
 }
 
 .disabled .hover-value {
