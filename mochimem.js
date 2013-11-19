@@ -247,7 +247,7 @@ function validateStats(stats) {
   var tests0 = stats[0].tests;
 
   // Make sure all runs prefix match on the names.
-  for (var n = 0; n < stats.length; n++) {
+  for (var n = 1; n < stats.length; n++) {
     var tests = stats[n].tests;
     for (var i = 0; i < tests.length; i++) {
       if (tests0[i].url !== tests[i].url) {
