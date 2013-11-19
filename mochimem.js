@@ -2,14 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var CONFIG = {
-  colors: {
-    "0:resident": "#1f77b4",
-    "0:vsize": "#9467bd",
-    "0:heapAllocated": "#d62728",
-    "0:largestContiguousVMBlock": "#8c564b"
-  }
-};
+// Singleton graph instance.
+var graph;
 
 function showMessage(message) {
   document.getElementById("main").style.display = "none";
@@ -95,6 +89,10 @@ function validateStats(stats) {
   return true;
 }
 
+function computeGraphHeight() {
+  return window.innerHeight - document.getElementById("panel").offsetHeight - 110;
+}
+
 function renderStats(stats) {
   function h(s) {
     var c = 0;
@@ -134,10 +132,10 @@ function renderStats(stats) {
 
   // FIXME: I can't figure out an elegant way to use CSS and DOM to figure
   // out the graph width.
-  var graph = new Rickshaw.Graph({
+  graph = new Rickshaw.Graph({
     element: document.getElementById("graph"),
     width: document.body.offsetWidth - 80,
-    height: window.innerHeight - document.getElementById("panel").offsetHeight - 110,
+    height: computeGraphHeight(),
     renderer: "line",
     interpolation: "linear",
     series: series
@@ -217,8 +215,14 @@ function addLogControls(url) {
   var logControls = document.createElement("div");
   logControls.className = "log-controls";
   logControls.innerHTML =
-    '<input type="text" onkeypress="onTypeLogURL(event);" value="' + url + '"></input>';
+    '<input type="text" onkeypress="onTypeLogURL(event);"' +
+    (url ? url : "") + '"></input>';
   document.getElementById("controls").appendChild(logControls);
+
+  if (graph) {
+    graph.setSize({ width: graph.width, height: computeGraphHeight() });
+    graph.render();
+  }
 }
 
 function onTypeLogURL(e) {
