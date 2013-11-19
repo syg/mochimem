@@ -215,7 +215,7 @@ function addLogControls(url) {
   var logControls = document.createElement("div");
   logControls.className = "log-controls";
   logControls.innerHTML =
-    '<input type="text" onkeypress="onTypeLogURL(event);"' +
+    '<input type="text" onkeypress="onTypeLogURL(event);" value="' +
     (url ? url : "") + '"></input>';
   document.getElementById("controls").appendChild(logControls);
 
