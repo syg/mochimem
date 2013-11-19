@@ -30,7 +30,7 @@ var Legend = Rickshaw.Class.create({
 
     this.element.classList.add(this.className);
 
-    var stats = args.stats;
+    var stats = args.stats.reverse();
     var lists = [];
     for (var i = 0; i < stats.length; i++) {
       var list = document.createElement("ul");
