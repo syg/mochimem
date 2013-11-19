@@ -60,6 +60,14 @@ var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
 
   _addListeners: function() {
     Rickshaw.Graph.HoverDetail.prototype._addListeners.call(this);
+
+    // Hide held points when sliding the viewport.
+    this.graph.onUpdate(function () {
+      this._hoverHold = false;
+      this.hide();
+    }.bind(this));
+
+    // Hold on click.
     this.graph.element.addEventListener(
       "click",
       function (e) {
