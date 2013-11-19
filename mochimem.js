@@ -5,6 +5,75 @@
 // Singleton graph instance.
 var graph;
 
+function formatBytes(bytes) {
+  if (bytes === 0)
+    return "";
+  var mb = bytes / (1024 * 1024);
+  if (mb > 1024) {
+    var gb = mb / 1024;
+    if (gb > 1024) {
+        var tb = gb / 1024;
+        return tb.toFixed(2) + " TB";
+    }
+    return gb.toFixed(2) + " GB";
+  }
+  return mb.toFixed(2) + " MB";
+}
+
+// Custom hover.
+var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
+  render: function (args) {
+    document.getElementById("test-name").innerHTML = args.formattedXValue;
+
+    var details = args.detail.sort(function (a, b) { return a.order - b.order });
+    for (var i = 0; i < details.length; i++) {
+      var d = details[i];
+
+      // Display the y value in the legend.
+      graph._hoverValues[d.name].innerHTML = d.formattedYValue;
+
+      // Display a dot on every line.
+      var dot = document.createElement("div");
+      dot.className = "dot";
+      dot.style.top = graph.y(d.value.y0 + d.value.y) + "px";
+      dot.style.borderColor = d.series.color;
+
+      this.element.appendChild(dot);
+
+      dot.className = "dot active";
+
+      this.show();
+    }
+  },
+
+  update: function (e) {
+    if (this._hoverHold)
+      return;
+    Rickshaw.Graph.HoverDetail.prototype.update.call(this, e);
+  },
+
+  hide: function () {
+    if (this._hoverHold)
+      return;
+    Rickshaw.Graph.HoverDetail.prototype.hide.call(this);
+  },
+
+  _addListeners: function() {
+    Rickshaw.Graph.HoverDetail.prototype._addListeners.call(this);
+    this.graph.element.addEventListener(
+      "click",
+      function (e) {
+        this.visible = true;
+        this.update(e);
+        this._hoverHold = !this._hoverHold;
+        if (!this._hoverHold)
+          this.update(e);
+      }.bind(this),
+      false
+    );
+  }
+});
+
 function showMessage(message) {
   document.getElementById("main").style.display = "none";
   document.getElementById("message").style = "";
@@ -12,7 +81,7 @@ function showMessage(message) {
 }
 
 function showError(message) {
-    showMessage("<h1 style='color: #d62728;'>" + message + "</h1>");
+    showMessage('<h1 style="color: #d62728;">' + message + "</h1>");
 }
 
 function hideMessage() {
@@ -60,15 +129,6 @@ function visualize(urls) {
     downloadLog(xhrs, urls[i], i, stats);
 }
 
-function formatBytes(bytes) {
-  if (bytes === 0)
-    return "";
-  var mb = bytes / (1024 * 1024);
-  if (mb > 1024)
-    return (mb / 1024).toFixed(2) + " GB";
-  return mb.toFixed(2) + " MB";
-}
-
 function validateStats(stats) {
   // Sort by number of tests run.
   stats = stats.sort(function (s1, s2) {
@@ -90,7 +150,7 @@ function validateStats(stats) {
 }
 
 function computeGraphHeight() {
-  return window.innerHeight - document.getElementById("panel").offsetHeight - 110;
+  return window.innerHeight - document.getElementById("panel").offsetHeight - 100;
 }
 
 function renderStats(stats) {
@@ -151,7 +211,7 @@ function renderStats(stats) {
     element: document.getElementById("slider"),
   });
 
-  var hoverDetail = new Rickshaw.Graph.HoverDetail({
+  var hoverDetail = new Hover({
     graph: graph,
     xFormatter: function (x) { return tests[x].url; },
     yFormatter: formatBytes
@@ -166,6 +226,16 @@ function renderStats(stats) {
     graph: graph,
     legend: legend
   });
+
+  var hoverValues = {};
+  var hoverLines = legend.lines;
+  for (var i = 0; i < hoverLines.length; i++) {
+    var hoverValue = document.createElement("span");
+    hoverValue.className = "hover-value";
+    hoverLines[i].element.appendChild(hoverValue);
+    hoverValues[hoverLines[i].series.name] = hoverValue;
+  }
+  graph._hoverValues = hoverValues;
 
   graph.render();
   hideMessage();

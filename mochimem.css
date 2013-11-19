@@ -4,35 +4,31 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-
 .rickshaw_legend {
     padding: 0 0 4px 0;
+    width: 100%;
 }
 
-.rickshaw_graph .detail .x_label {
-    font-family: 'Open Sans', sans-serif;
-    color: white;
-    background-image: url(background-noise-toolbar.png), linear-gradient(#3e4750, #3e4750);
-    box-shadow: 0 1px 0 hsla(204,45%,98%,.05) inset, -1px 0 0 hsla(204,45%,98%,.05) inset, 0 -1px 0 hsla(204,45%,98%,.05) inset;
-    opacity: 0.9;
-    border-radius: 2px;
-    border: none;
+.rickshaw_legend .line {
+    padding: 0;
 }
 
-.rickshaw_graph .detail .item {
-    font-family: 'Open Sans', sans-serif;
-    border: 0;
-    border-radiux: 2px;
-    padding: 6px;
+.hover-value {
+    display: inline-block;
+    padding-left: 8px;
+    min-width: 120px;
 }
 
-.rickshaw_graph .detail .item.active {
-    color: white;
-    background-image: url(background-noise-toolbar.png), linear-gradient(#3e4750, #3e4750);
+.disabled .hover-value {
+    color: transparent;
+}
+
+div#test-name {
+    margin: 12px 0;
+    text-align: center;
 }
 
 div#legend {
-    width: 100%;
     font-size: inherit;
     font-family: 'Open Sans', sans-serif;
     background-color: inherit;
@@ -87,13 +83,14 @@ div#add-log {
     font-size: 80%;
     text-align: center;
     min-height: 22px;
+    min-width: 58px;
     padding: 2px 8px;
     text-shadow: 0 -1px 0 hsla(210,8%,5%,.45);
     border: 1px solid hsla(210,8%,5%,.45);
     border-radius: 3px;
     background: linear-gradient(hsla(212,7%,57%,.35), hsla(212,7%,57%,.1)) padding-box;
     box-shadow: 0 1px 0 hsla(210,16%,76%,.15) inset, 0 0 0 1px hsla(210,16%,76%,.15) inset, 0 1px 0 hsla(210,16%,76%,.15);
-    margin: 8px 0 0 0;
+    margin: 0 0 8px 0;
     color: inherit;
 }
 
