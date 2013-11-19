@@ -24,7 +24,7 @@ function formatBytes(bytes) {
 var Legend = Rickshaw.Class.create({
   className: "rickshaw_legend",
 
-  initialize: function(args) {
+  initialize: function (args) {
     this.element = args.element;
     this.graph = args.graph;
 
@@ -42,7 +42,7 @@ var Legend = Rickshaw.Class.create({
     this.render();
   },
 
-  render: function() {
+  render: function () {
     this.hoverValues = {};
     var lists = this.lists;
     for (var i = 0; i < lists.length; i++) {
@@ -58,7 +58,7 @@ var Legend = Rickshaw.Class.create({
       this.addLine(series[i]);
   },
 
-  addLine: function(series) {
+  addLine: function (series) {
     var line = document.createElement("li");
     line.className = "line";
     if (series.disabled)
@@ -160,7 +160,7 @@ var Hover = Rickshaw.Class.create(Rickshaw.Graph.HoverDetail, {
     Rickshaw.Graph.HoverDetail.prototype.show.call(this);
   },
 
-  _addListeners: function() {
+  _addListeners: function () {
     Rickshaw.Graph.HoverDetail.prototype._addListeners.call(this);
 
     // Hide held points when sliding the viewport.
@@ -281,7 +281,7 @@ function renderStats(stats) {
     var supported = stats[n].supported;
     var tests = stats[n].tests;
 
-    if (Object.keys(stats[n].supported).length === 0) {
+    if (Object.keys(supported).length === 0) {
       showError("No memory stats found");
       return;
     }
