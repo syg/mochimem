@@ -37,7 +37,7 @@ var Legend = Rickshaw.Class.create({
       lists.push(list);
       this.element.appendChild(list);
     }
-    this.lists = lists.reverse();
+    this.lists = lists;
 
     this.render();
   },
