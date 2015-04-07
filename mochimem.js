@@ -380,9 +380,9 @@ function extractStats(buf) {
       } else if (tests.length === 0 && (j = line.indexOf(" not supported")) !== -1) {
         supported[line.substring(i + 12, j)] = false;
       }
-    } else if ((i = line.indexOf("TEST-END | ")) !== -1) {
-      // "TEST-END | "  .length == 11
-      tests.push({ url: line.substring(i + 11, line.indexOf(" |", i + 11)),
+    } else if ((i = line.indexOf("TEST-OK | ")) !== -1) {
+      // "TEST-OK | "  .length == 10
+      tests.push({ url: line.substring(i + 10, line.indexOf(" |", i + 10)),
                    memory: mem });
       mem = {};
     }
