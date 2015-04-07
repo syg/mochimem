@@ -444,6 +444,5 @@ function checkLogURLFromQuery() {
     return;
   }
 
-  showMessage("<h1>Please enter the TBPL full log URL(s) to mochitest run(s) below.</h1>" +
-              "<p>Look for the &ldquo;Download Full Log&rdquo; link in getParsedLog.php</p>");
+  showMessage("<h1>Please enter the TreeHerder full log URL(s) to mochitest run(s) below.</h1>");
 }
