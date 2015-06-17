@@ -387,8 +387,8 @@ function extractStats(buf) {
         }
       }
     } else if ((i = line.indexOf("TEST-OK | ")) !== -1) {
-      // "TEST-END | "  .length == 11
-      tests.push({ url: line.substring(i + 11, line.indexOf(" |", i + 11)),
+      // "TEST-OK | "  .length == 10
+      tests.push({ url: line.substring(i + 10, line.indexOf(" |", i + 10)),
                    memory: mem });
       mem = {};
     }
