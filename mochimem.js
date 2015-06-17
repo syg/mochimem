@@ -368,21 +368,27 @@ function extractStats(buf) {
     // N.B. This is so much faster than regexps it's not even funny.
     var i, j;
     if ((i = line.indexOf("MEMORY STAT ")) !== -1) {
-      // "MEMORY STAT " .length == 12
-      // " after test: ".length == 13
-      //
-      // If we don't support the stat on the particular platform, record a
-      // NaN. We only see such messages on the first test.
-      if ((j = line.indexOf(" after test: ", i + 12)) !== -1) {
-        mem[line.substring(i + 12, j)] = parseInt(line.substr(j + 13));
-        if (tests.length === 0)
-          supported[line.substring(i + 12, j)] = true;
-      } else if (tests.length === 0 && (j = line.indexOf(" not supported")) !== -1) {
+      if (tests.length === 0 && (j = line.indexOf(" not supported")) !== -1) {
+        // If we don't support the stat on the particular platform, record a
+        // NaN. We only see such messages on the first test.
+        //
+        // "MEMORY STAT "   .length == 12
         supported[line.substring(i + 12, j)] = false;
+      } else {
+        // "MEMORY STAT | " .length == 14
+        var rawStats = line.substr(i + 14).split(" | ");
+        for (var k = 0; k < rawStats.length; k++) {
+          j = rawStats[k].indexOf(" ");
+          var stat = rawStats[k].substring(0, j);
+          var mb = rawStats[k].substring(j + 1, rawStats[k].indexOf("MB"));
+          mem[stat] = parseInt(mb) * 1024 * 1024;
+          if (tests.length === 0)
+            supported[stat] = true;
+        }
       }
     } else if ((i = line.indexOf("TEST-OK | ")) !== -1) {
-      // "TEST-OK | "  .length == 10
-      tests.push({ url: line.substring(i + 10, line.indexOf(" |", i + 10)),
+      // "TEST-END | "  .length == 11
+      tests.push({ url: line.substring(i + 11, line.indexOf(" |", i + 11)),
                    memory: mem });
       mem = {};
     }
